@@ -1,4 +1,4 @@
-import Unit
+from . import Unit
 class Converter:
 #the convert function will convert between diferent units. It needs a unit to convert to and the value to be converted. The function then compares the unit recieved from the UI to an enum of weights and performs the convertion.
     def convert(unit, value):

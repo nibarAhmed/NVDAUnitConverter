@@ -1,5 +1,5 @@
-import Converter
-import Unit
+from . import Converter
+from . import Unit
 import wx
 import string
 app=wx.App()
@@ -13,8 +13,7 @@ class UI(wx.Frame):
         #the next sizer is for the combo box and the label.
         self.comboSizer=wx.BoxSizer(wx.HORIZONTAL)
         #this sizer is for the edit boxes and button to convert as well as a cansel button. 
-        self.editSizer=wx.BoxSizer(wx.HORIZONTAL)
-        
+        self.editSizer=wx.BoxSizer(wx.HORIZONTAL)        
         #this sizer is for the window in order to allow the panel to fit in the window.
         self.windowSizer=wx.BoxSizer(wx.HORIZONTAL)
         self.comboLabelText="select what to convert"
@@ -50,7 +49,6 @@ class UI(wx.Frame):
         self.SetSizerAndFit(self.windowSizer)
         self.SetBackgroundColour("black")
         self.Center()
-        self.Show(True)
     #this function checks weather the key that was just pressed is numeric or not. If it is numeric then the event is skipped and the user can continue typing.
     def onKeyPressed(self, event):
         keyCode=event.GetKeyCode()
@@ -62,9 +60,9 @@ class UI(wx.Frame):
             event.Skip()
         #allow for negative numbers.
         elif chr(keyCode)=='-':
-            #check if - is not the first character in the input the value is changed in order to make sure - is before a number.
-            if currentValue.find('-')>0:
-                self.userInput.SetValue('-'+currentValue)
+            if currentValue!="":
+                if currentValue[0]=='-':
+                    self.userInput.SetValue('-'+currentValue)
             else:
                 event.Skip()
         #allow floats
@@ -73,7 +71,7 @@ class UI(wx.Frame):
         elif chr(keyCode)=='\t':
             event.Skip()
     #this function performs the conversion when enter or the convert button is pressed and then shows a message dialog containing the result.
-    def onEnterPressed(self, event):-
+    def onEnterPressed(self, event):
         result=Converter.Converter.convert(self.choice, float(self.userInput.GetValue()))
         self.resultDialog.SetMessage(str(result))
         self.resultDialog.ShowModal()
@@ -81,5 +79,3 @@ class UI(wx.Frame):
         self.Close()
     def onSelect(self, event):
         self.choice=event.GetString()
-UI(None, title="NVDA unit converter")
-app.MainLoop()
