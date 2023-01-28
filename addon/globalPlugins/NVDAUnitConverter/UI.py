@@ -2,7 +2,7 @@ from . import Converter
 from . import Unit
 import wx
 import string
-app=wx.App()
+import winsound
 class UI(wx.Frame):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -14,6 +14,7 @@ class UI(wx.Frame):
         self.comboSizer=wx.BoxSizer(wx.HORIZONTAL)
         #this sizer is for the edit boxes and button to convert as well as a cansel button. 
         self.editSizer=wx.BoxSizer(wx.HORIZONTAL)        
+        self.buttonsSizer=wx.BoxSizer(wx.HORIZONTAL)        
         #this sizer is for the window in order to allow the panel to fit in the window.
         self.windowSizer=wx.BoxSizer(wx.HORIZONTAL)
         self.comboLabelText="select what to convert"
@@ -23,29 +24,32 @@ class UI(wx.Frame):
         self.choice=None
         #remove this later
         self.comboLabel.SetBackgroundColour("white")
-        self.comboBox.SetBackgroundColour("red")
+        self.comboBox.SetBackgroundColour("white")
         self.userInputLabelStr="convert from "
         self.userInputLabel=wx.StaticText(self.mainPanel, label=self.userInputLabelStr)
         self.userInput=wx.TextCtrl(self.mainPanel, style=wx.TE_PROCESS_ENTER)
         self.userInput.Bind(wx.EVT_CHAR, self.onKeyPressed)
         self.userInput.Bind(wx.EVT_TEXT_ENTER, self.onEnterPressed)
-        self.userInput.SetBackgroundColour("green")
-        self.userInputLabel.SetBackgroundColour("blue")
+        self.userInput.SetBackgroundColour("white")
+        self.userInputLabel.SetBackgroundColour("white")
         self.convertBtn=wx.Button(self.mainPanel, label="Convert")
         self.convertBtn.Bind(wx.EVT_BUTTON, self.onEnterPressed)
         self.closeBtn=wx.Button(self.mainPanel, label="Close")
         self.closeBtn.Bind(wx.EVT_BUTTON, self.onClosePressed)
         self.resultDialog=wx.MessageDialog(self, "result", "result", wx.OK)
-        self.comboSizer.Add(self.comboLabel, proportion=0, flag=wx.Left|wx.RIGHT, border=10)
-        self.comboSizer.Add(self.comboBox, proportion=2, flag=wx.EXPAND|wx.RIGHT|wx.Bottom, border=20)
-        self.panelSizer.Add(self.comboSizer, flag=wx.TOP|wx.BOTTOM, border=50)
-        self.editSizer.Add(self.userInputLabel, proportion=0, flag=wx.LEFT|wx.Right, border=10)
-        self.editSizer.Add(self.userInput, flag=wx.RIGHT, border=30)
-        self.editSizer.Add(self.convertBtn, flag=wx.Right, border=30)
-        self.editSizer.Add(self.closeBtn, flag=wx.RIGHT, border=10)
-        self.panelSizer.Add(self.editSizer, proportion=1, flag=wx.EXPAND|wx.ALL, border=10)
+        self.comboSizer.Add(self.comboLabel, proportion=0, flag=wx.RIGHT, border=10)
+        self.comboSizer.Add(self.comboBox, proportion=2)
+        self.panelSizer.Add(self.comboSizer, proportion=0, flag=wx.TOP|wx.EXPAND, border=40)
+        self.editSizer.Add(self.userInputLabel, proportion=0, flag=wx.Right, border=10)
+        self.editSizer.Add(self.userInput, proportion=2)
+        self.buttonsSizer.Add(self.convertBtn, proportion=0)
+        # just a spacer for the buttons so one is at the far left and one is at the far right. 150 is a constent that I set by just looking at the window. a smart choice will be to calculate the windows width minus both button widths
+        self.buttonsSizer.Add((150,0), proportion=1)
+        self.buttonsSizer.Add(self.closeBtn, proportion=0)
+        self.panelSizer.Add(self.editSizer, proportion=0, flag=wx.TOP|wx.EXPAND, border=10)
+        self.panelSizer.Add(self.buttonsSizer, proportion=0, flag=wx.TOP|wx.EXPAND, border=30)
         self.mainPanel.SetSizer(self.panelSizer)
-        self.windowSizer.Add(self.mainPanel, proportion=0, flag=wx.EXPAND, border=0)
+        self.windowSizer.Add(self.mainPanel, proportion=1, flag=wx.EXPAND, border=30)
         self.SetSizerAndFit(self.windowSizer)
         self.SetBackgroundColour("black")
         self.Center()
@@ -70,6 +74,8 @@ class UI(wx.Frame):
             event.Skip()
         elif chr(keyCode)=='\t':
             event.Skip()
+        else:
+            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
     #this function performs the conversion when enter or the convert button is pressed and then shows a message dialog containing the result.
     def onEnterPressed(self, event):
         result=Converter.Converter.convert(self.choice, float(self.userInput.GetValue()))

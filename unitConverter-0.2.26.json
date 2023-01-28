@@ -1,0 +1,29 @@
+{
+	"addonId": "unitConverter",
+	"displayName": "NVDA unit converter",
+	"URL": "",
+	"description": "With this addon you can perform convertions between diferent measurements like from farenheight to celsius. Simply press NVDA+shift+u to get started.\n",
+	"sha256": "f0dc0aa66246005497508cbddc1305ddbf6775b0a41bd703d095ae0f9958ac1a",
+	"homepage": "https://github.com/nibarAhmed/NVDAUnitConverter",
+	"addonVersionName": "0.2.26",
+	"addonVersionNumber": {
+		"major": 0,
+		"minor": 2,
+		"patch": 26
+	},
+	"minNVDAVersion": {
+		"major": 2020,
+		"minor": 1,
+		"patch": 0
+	},
+	"lastTestedVersion": {
+		"major": 2022,
+		"minor": 3,
+		"patch": 0
+	},
+	"channel": "stable",
+	"publisher": "",
+	"sourceURL": "https://github.com/nibarAhmed/NVDAUnitConverter",
+	"license": null,
+	"licenseURL": null
+}
