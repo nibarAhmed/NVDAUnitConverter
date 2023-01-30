@@ -26,7 +26,7 @@ addon_info = {
 	"addon_description": _("""With this addon you can perform convertions between diferent measurements like from farenheight to celsius. Simply press NVDA+shift+u to get started.
 """),
 	# version
-	"addon_version": 	"0.2.26",
+	"addon_version": 	"0.3.5",
 	# Author(s)
 	"addon_author": "Nibar Ahmed <nibarahmed0@gmail.com>",
 	# URL for the add-on documentation support

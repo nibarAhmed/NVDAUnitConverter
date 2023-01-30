@@ -52,6 +52,7 @@ class UI(wx.Frame):
         self.windowSizer.Add(self.mainPanel, proportion=1, flag=wx.EXPAND, border=30)
         self.SetSizerAndFit(self.windowSizer)
         self.SetBackgroundColour("black")
+        self.mainPanel.Bind(wx.EVT_CHAR_HOOK, self.onEscapePressed)
         self.Center()
     #this function checks weather the key that was just pressed is numeric or not. If it is numeric then the event is skipped and the user can continue typing.
     def onKeyPressed(self, event):
@@ -75,7 +76,7 @@ class UI(wx.Frame):
         elif chr(keyCode)=='\t':
             event.Skip()
         else:
-            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
+            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS|winsound.SND_ASYNC)
     #this function performs the conversion when enter or the convert button is pressed and then shows a message dialog containing the result.
     def onEnterPressed(self, event):
         result=Converter.Converter.convert(self.choice, float(self.userInput.GetValue()))
@@ -85,3 +86,7 @@ class UI(wx.Frame):
         self.Close()
     def onSelect(self, event):
         self.choice=event.GetString()
+    def onEscapePressed(self, event):
+        if event.GetKeyCode()==wx.WXK_ESCAPE:
+            self.Close()
+        event.Skip()

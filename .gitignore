@@ -127,7 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
+#files to ignore as a part of the process of building the addon.
 addon/doc/*.css
 addon/doc/en/
 *_docHandler.py
@@ -137,4 +137,5 @@ addon/doc/en/
 *.pot
 *.py[co]
 *.nvda-addon
+*.json
 .sconsign.dblite
