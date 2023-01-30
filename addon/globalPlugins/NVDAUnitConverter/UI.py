@@ -19,19 +19,21 @@ class UI(wx.Frame):
         self.windowSizer=wx.BoxSizer(wx.HORIZONTAL)
         self.comboLabelText="select what to convert"
         self.comboLabel=wx.StaticText(self.mainPanel, label=self.comboLabelText)
-        self.comboBox=wx.ComboBox(self.mainPanel, style=wx.CB_READONLY, choices=Unit.Unit.getAllValues())
+        self.__units=Unit.Unit.getAllValues()
+        self.comboBox=wx.ComboBox(self.mainPanel, style=wx.CB_READONLY, choices=self.__units, value=self.__units[0])
         self.comboBox.Bind(wx.EVT_COMBOBOX, self.onSelect)
         self.choice=None
         #remove this later
         self.comboLabel.SetBackgroundColour("white")
         self.comboBox.SetBackgroundColour("white")
-        self.userInputLabelStr="convert from "
+        self.userInputLabelStr="Value "
         self.userInputLabel=wx.StaticText(self.mainPanel, label=self.userInputLabelStr)
         self.userInput=wx.TextCtrl(self.mainPanel, style=wx.TE_PROCESS_ENTER)
         self.userInput.Bind(wx.EVT_CHAR, self.onKeyPressed)
         self.userInput.Bind(wx.EVT_TEXT_ENTER, self.onEnterPressed)
         self.userInput.SetBackgroundColour("white")
         self.userInputLabel.SetBackgroundColour("white")
+        self.__inputErrorMsg="It looks like something went wrong when trying to convert. Please check your input and try again."
         self.convertBtn=wx.Button(self.mainPanel, label="Convert")
         self.convertBtn.Bind(wx.EVT_BUTTON, self.onEnterPressed)
         self.closeBtn=wx.Button(self.mainPanel, label="Close")
@@ -60,11 +62,12 @@ class UI(wx.Frame):
         currentValue=self.userInput.GetValue()
         if chr(keyCode) in string.digits:
             event.Skip()
-        #allow keys that are not printable but special such as arrows and so on.
-        elif chr(keyCode) not in string.printable:
+        #allow keys that are not printable but special such as arrows, controll, tab and escape. Escape is allowed in order to prevent beeping when using it to close the window.
+        elif chr(keyCode) not in string.printable or keyCode==wx.WXK_TAB:
             event.Skip()
         #allow for negative numbers.
         elif chr(keyCode)=='-':
+            #need to make sure the string is not empty before trying to access an index.
             if currentValue!="":
                 if currentValue[0]=='-':
                     self.userInput.SetValue('-'+currentValue)
@@ -73,14 +76,24 @@ class UI(wx.Frame):
         #allow floats
         elif chr(keyCode)=='.' and '.' not in currentValue:
             event.Skip()
-        elif chr(keyCode)=='\t':
-            event.Skip()
         else:
             winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS|winsound.SND_ASYNC)
+    #this function expects an input and checks if it can be converted to a float. If so it returns true otherwise it returns false.
+    def __isFloat(self, value):
+        if value =="":
+            return False
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
     #this function performs the conversion when enter or the convert button is pressed and then shows a message dialog containing the result.
     def onEnterPressed(self, event):
-        result=Converter.Converter.convert(self.choice, float(self.userInput.GetValue()))
-        self.resultDialog.SetMessage(str(result))
+        if self.__isFloat(self.userInput.GetValue()):
+            result=Converter.Converter.convert(self.choice, float(self.userInput.GetValue()))
+            self.resultDialog.SetMessage(str(result))
+        else:
+            self.resultDialog.SetMessage(self.__inputErrorMsg)
         self.resultDialog.ShowModal()
     def onClosePressed(self, event):
         self.Close()
@@ -89,4 +102,5 @@ class UI(wx.Frame):
     def onEscapePressed(self, event):
         if event.GetKeyCode()==wx.WXK_ESCAPE:
             self.Close()
-        event.Skip()
+        else:
+            event.Skip()
