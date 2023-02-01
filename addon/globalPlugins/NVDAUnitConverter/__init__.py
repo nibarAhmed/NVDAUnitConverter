@@ -3,8 +3,19 @@ import scriptHandler
 import tones
 from . import UI
 import wx
+import logging
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
-    @scriptHandler.script(gesture="kb:NVDA+I")
+    log = logging.getLogger("nvda")
+    @scriptHandler.script(
+        gesture="kb:NVDA+shift+U",
+        description="Launches the unit converter."
+        )
     def script_launch(self, gesture):
-        ui=UI.UI(None, title="NVDAUnitConverter")
-        ui.Show(True)
+        #only one instance of the addon is allowed to run.
+        if wx.FindWindowByName("NVDAUnitConverter") is None:
+            self.ui=UI.UI(None, title="NVDAUnitConverter", name="NVDAUnitConverter")
+            #self.log.info("This is a message written to the NVDA log.")
+            self.ui.Show(True)
+    def terminate(self):
+        self.ui.Close()
+        super().terminate()

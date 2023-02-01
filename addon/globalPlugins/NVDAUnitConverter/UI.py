@@ -2,7 +2,6 @@ from . import Converter
 from . import Unit
 import wx
 import string
-import winsound
 class UI(wx.Frame):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -20,9 +19,9 @@ class UI(wx.Frame):
         self.comboLabelText="select what to convert"
         self.comboLabel=wx.StaticText(self.mainPanel, label=self.comboLabelText)
         self.__units=Unit.Unit.getAllValues()
+        self.choice=self.__units[0]
         self.comboBox=wx.ComboBox(self.mainPanel, style=wx.CB_READONLY, choices=self.__units, value=self.__units[0])
         self.comboBox.Bind(wx.EVT_COMBOBOX, self.onSelect)
-        self.choice=None
         #remove this later
         self.comboLabel.SetBackgroundColour("white")
         self.comboBox.SetBackgroundColour("white")
@@ -46,7 +45,7 @@ class UI(wx.Frame):
         self.editSizer.Add(self.userInput, proportion=2)
         self.buttonsSizer.Add(self.convertBtn, proportion=0)
         # just a spacer for the buttons so one is at the far left and one is at the far right. 150 is a constent that I set by just looking at the window. a smart choice will be to calculate the windows width minus both button widths
-        self.buttonsSizer.Add((150,0), proportion=1)
+        self.buttonsSizer.Add((self.GetMaxWidth()-self.closeBtn.GetMaxWidth()-self.convertBtn.GetMaxWidth(),0), proportion=1)
         self.buttonsSizer.Add(self.closeBtn, proportion=0)
         self.panelSizer.Add(self.editSizer, proportion=0, flag=wx.TOP|wx.EXPAND, border=10)
         self.panelSizer.Add(self.buttonsSizer, proportion=0, flag=wx.TOP|wx.EXPAND, border=30)
@@ -62,8 +61,8 @@ class UI(wx.Frame):
         currentValue=self.userInput.GetValue()
         if chr(keyCode) in string.digits:
             event.Skip()
-        #allow keys that are not printable but special such as arrows, controll, tab and escape. Escape is allowed in order to prevent beeping when using it to close the window.
-        elif chr(keyCode) not in string.printable or keyCode==wx.WXK_TAB:
+        #allow keys that are not printable but special such as arrows, controll, tab and escape. Escape is allowed in order to prevent beeping when using it to close the window. Enter is allowed in order to be able to process the input when the user presses the key.
+        elif chr(keyCode) not in string.printable or keyCode==wx.WXK_TAB or keyCode==wx.WXK_RETURN:
             event.Skip()
         #allow for negative numbers.
         elif chr(keyCode)=='-':
@@ -77,7 +76,7 @@ class UI(wx.Frame):
         elif chr(keyCode)=='.' and '.' not in currentValue:
             event.Skip()
         else:
-            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS|winsound.SND_ASYNC)
+            wx.Bell()
     #this function expects an input and checks if it can be converted to a float. If so it returns true otherwise it returns false.
     def __isFloat(self, value):
         if value =="":
