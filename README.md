@@ -1,7 +1,7 @@
 # NVDAUnitConverter
 
 * Author: Nibar Ahmed
-* Download [stable version.][1]
+* Download [stable version.](https://github.com/nibarAhmed/NVDAUnitConverter/releases/latest)
 
 ## getting started
 
@@ -11,10 +11,10 @@ You can change the gesture for this add-on from the NVDAInputGestures manager un
 ## Contact
 
 If you have suggestions or encounter bugs or would like more units to be added you can:
+
 reach me on twitter[at NibarSito](https://twitter.com/NibarSito), [send an email.](mailto:nibarahmed0@gmail.com)
 
-##credits
+## credits
 
 Thanks to Hamada Trichine for helping with testing and making sure the user interface looks nice.
 Check out his [gitHub page.](https://github.com/hamadatrichine)
-[1]: https://github.com/nibarAhmed/NVDAUnitConverter/releases/latest
