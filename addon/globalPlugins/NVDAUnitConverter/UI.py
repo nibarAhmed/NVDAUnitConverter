@@ -1,4 +1,5 @@
-from . import Converter
+# NVDA unit converter
+# copyright 2023 Nibar Ahmed. Licensed under GPLv2.
 from . import Unit
 import wx
 import string
@@ -9,10 +10,11 @@ class UI(wx.Frame):
         self.mainPanel=wx.Panel(self)
         #this is the panel sizer where items will be added. 
         self.panelSizer=wx.BoxSizer(wx.VERTICAL)
-        #the next sizer is for the combo box and the label.
+        #this sizer is for the combo box and the label.
         self.comboSizer=wx.BoxSizer(wx.HORIZONTAL)
-        #this sizer is for the edit boxes and button to convert as well as a cansel button. 
+        #this sizer is for the edit box and the label.
         self.editSizer=wx.BoxSizer(wx.HORIZONTAL)        
+        #a sizer to be able to arange the buttons
         self.buttonsSizer=wx.BoxSizer(wx.HORIZONTAL)        
         #this sizer is for the window in order to allow the panel to fit in the window.
         self.windowSizer=wx.BoxSizer(wx.HORIZONTAL)
@@ -22,9 +24,6 @@ class UI(wx.Frame):
         self.choice=self.__units[0]
         self.comboBox=wx.ComboBox(self.mainPanel, style=wx.CB_READONLY, choices=self.__units, value=self.__units[0])
         self.comboBox.Bind(wx.EVT_COMBOBOX, self.onSelect)
-        #remove this later
-        self.comboLabel.SetBackgroundColour("white")
-        self.comboBox.SetBackgroundColour("white")
         self.userInputLabelStr="Value "
         self.userInputLabel=wx.StaticText(self.mainPanel, label=self.userInputLabelStr)
         self.userInput=wx.TextCtrl(self.mainPanel, style=wx.TE_PROCESS_ENTER)
@@ -44,7 +43,7 @@ class UI(wx.Frame):
         self.editSizer.Add(self.userInputLabel, proportion=0, flag=wx.Right, border=10)
         self.editSizer.Add(self.userInput, proportion=2)
         self.buttonsSizer.Add(self.convertBtn, proportion=0)
-        # just a spacer for the buttons so one is at the far left and one is at the far right. 150 is a constent that I set by just looking at the window. a smart choice will be to calculate the windows width minus both button widths
+        # just a spacer for the buttons so one is at the far left and one is at the far right. 
         self.buttonsSizer.Add((self.GetMaxWidth()-self.closeBtn.GetMaxWidth()-self.convertBtn.GetMaxWidth(),0), proportion=1)
         self.buttonsSizer.Add(self.closeBtn, proportion=0)
         self.panelSizer.Add(self.editSizer, proportion=0, flag=wx.TOP|wx.EXPAND, border=10)
@@ -52,7 +51,6 @@ class UI(wx.Frame):
         self.mainPanel.SetSizer(self.panelSizer)
         self.windowSizer.Add(self.mainPanel, proportion=1, flag=wx.EXPAND, border=30)
         self.SetSizerAndFit(self.windowSizer)
-        self.SetBackgroundColour("black")
         self.mainPanel.Bind(wx.EVT_CHAR_HOOK, self.onEscapePressed)
         self.Center()
     #this function checks weather the key that was just pressed is numeric or not. If it is numeric then the event is skipped and the user can continue typing.
@@ -61,7 +59,7 @@ class UI(wx.Frame):
         currentValue=self.userInput.GetValue()
         if chr(keyCode) in string.digits:
             event.Skip()
-        #allow keys that are not printable but special such as arrows, controll, tab and escape. Escape is allowed in order to prevent beeping when using it to close the window. Enter is allowed in order to be able to process the input when the user presses the key.
+        #allow keys that are not printable but special such as arrows, controll, tab and escape. 
         elif chr(keyCode) not in string.printable or keyCode==wx.WXK_TAB or keyCode==wx.WXK_RETURN:
             event.Skip()
         #allow for negative numbers.
@@ -77,7 +75,7 @@ class UI(wx.Frame):
             event.Skip()
         else:
             wx.Bell()
-    #this function expects an input and checks if it can be converted to a float. If so it returns true otherwise it returns false.
+    #this function expects an input and checks if it can be converted to a float. If so it returns true otherwise it returns false. The value expected can either be an int, float or a numeric string.
     def __isFloat(self, value):
         if value =="":
             return False
@@ -89,7 +87,7 @@ class UI(wx.Frame):
     #this function performs the conversion when enter or the convert button is pressed and then shows a message dialog containing the result.
     def onEnterPressed(self, event):
         if self.__isFloat(self.userInput.GetValue()):
-            result=Converter.Converter.convert(self.choice, float(self.userInput.GetValue()))
+            result=Unit.Unit.convert(self.choice, float(self.userInput.GetValue()))
             self.resultDialog.SetMessage(str(result))
         else:
             self.resultDialog.SetMessage(self.__inputErrorMsg)

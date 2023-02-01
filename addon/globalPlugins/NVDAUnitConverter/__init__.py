@@ -1,3 +1,6 @@
+# NVDA unit converter
+# copyright 2023 Nibar Ahmed. Licensed under GPLv2.
+
 import globalPluginHandler
 import scriptHandler
 import tones

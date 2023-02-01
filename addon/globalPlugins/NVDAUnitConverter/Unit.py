@@ -1,3 +1,5 @@
+# NVDA unit converter
+# copyright 2023 Nibar Ahmed. Licensed under GPLv2.
 from enum import Enum
 #in order to be able to use string based enums you need to inherit the str class. In python 3.11 this is no longer the case. 
 class Unit(str, Enum):
@@ -9,3 +11,9 @@ class Unit(str, Enum):
         for i in Unit:
             values.append(i.value)
         return values
+    #the convert function will convert between diferent units. It needs a unit to convert to and the value to be converted. The function then compares the unit recieved from the UI to an enum of weights and performs the convertion.
+    def convert(unit, value):
+        if Unit.celsiusToFarenheight.value ==unit:
+            return (value*9/5)+32
+        elif Unit.farenheightToCelsius.value==unit:
+            return round ((value-32)*5/9, 3)
